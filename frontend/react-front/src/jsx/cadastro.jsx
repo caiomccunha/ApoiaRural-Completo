@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import "../css/telaCadastroReact.css";
+
+const MySwal = withReactContent(Swal)
 
 export default function Cadastro() {
   const navigate = useNavigate();
@@ -40,6 +44,18 @@ export default function Cadastro() {
 
   const cepValido = (cep) => cep.length === 8 && /^\d+$/.test(cep);
 
+  const Toast = MySwal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
+
   const buscarCep = async () => {
     const cep = form.cep.replace("_", "").trim();
     const url = `https://viacep.com.br/ws/${cep}/json/`;
@@ -49,7 +65,10 @@ export default function Cadastro() {
         const response = await fetch(url);
         const endereco = await response.json();
         if (endereco.erro) {
-          alert("CEP não encontrado");
+          Toast.fire({
+            icon: "error",
+            title: "CEP não encontrado",
+          });
         } else {
           setForm((prev) => ({
             ...prev,
@@ -57,62 +76,79 @@ export default function Cadastro() {
             cidade: endereco.localidade || "",
             estado: endereco.uf || "",
           }));
+          Toast.fire({
+            icon: "success",
+            title: "Endereço preenchido automaticamente",
+          });
         }
       } catch (error) {
         console.error("Erro ao buscar CEP:", error);
-        alert("Erro ao buscar CEP. Tente novamente.");
+        Toast.fire({
+          icon: "error",
+          title: "Erro ao buscar CEP",
+        });
       }
     } else {
-      alert("CEP inválido. Deve conter 8 dígitos.");
+      Toast.fire({
+        icon: "warning",
+        title: "CEP inválido. Deve conter 8 dígitos.",
+      });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Formata os campos antes de enviar
     const usuario = {
       ...form,
       documento: form.documento.replace(/\D/g, ""),
       telefone: form.telefone.replace(/\D/g, ""),
       cep: form.cep.replace(/\D/g, ""),
     };
+    if(cepValido(cep)) {
+      try {
+        const response = await fetch(`http://localhost:8080/tcc/usuarios`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(usuario),
+        });
 
-    try {
-      const response = await fetch(`http://localhost:8080/tcc/usuarios`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(usuario),
-      });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          const errorMessage = errorData?.message || `Erro ${response.status}`;
+          throw new Error(errorMessage);
+        }
 
-      if (!response.ok) {
-        // Tenta extrair a mensagem de erro do servidor, se disponível
-        const errorData = await response.json().catch(() => null);
-        const errorMessage = errorData?.message || `Erro ${response.status}`;
-        throw new Error(errorMessage);
+        const data = await response.json();
+
+        Toast.fire({
+          icon: "success",
+          title: "Usuário cadastrado com sucesso!",
+        });
+
+        localStorage.setItem("usuarioLogado", JSON.stringify(data));
+        limparFormulario();
+        navigate("/inicio");
+      } catch (error) {
+        console.error("Erro ao cadastrar usuário:", error);
+
+        if (error.message.includes("já cadastrado")) {
+          Toast.fire({
+            icon: "error",
+            title: "E-mail já cadastrado",
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: `Erro ao cadastrar: ${error.message}`,
+          });
+        }
       }
-
-      const data = await response.json();
-      alert("Usuário cadastrado com sucesso!");
-
-      // Armazena apenas os dados necessários no localStorage
-      localStorage.setItem("usuarioLogado", JSON.stringify(data));
-
-      limparFormulario();
-
-      // Redireciona após cadastro bem-sucedido
-      navigate("/inicio"); // Redireciona para a rota Inicio
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
-
-      // Mensagens de erro mais específicas
-      if (error.message.includes("já cadastrado")) {
-        alert(
-          "Este e-mail já está cadastrado. Por favor, faça login ou utilize outro e-mail."
-        );
-      } else {
-        alert(`Erro ao cadastrar: ${error.message}`);
-      }
+    } else {
+      Toast.fire({
+      icon: "error",
+      title: "CEP inválido!",
+          });
     }
   };
 

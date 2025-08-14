@@ -1,62 +1,90 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import "../css/LoginReact.css";
+
+const MySwal = withReactContent(Swal)
+
+const Toast = MySwal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  },
+});
 
 export default function Login() {
   const [form, setForm] = useState({
     email: "",
     senha: "",
   });
-  const [mensagemErro, setMensagemErro] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-    // Limpa mensagem de erro quando o usuário digita
-    if (mensagemErro) setMensagemErro("");
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validação dos campos
+
     if (!form.email.trim() || !form.senha) {
-      setMensagemErro("Por favor, preencha todos os campos.");
+      Toast.fire({
+        icon: "warning",
+        title: "Por favor, preencha todos os campos.",
+      });
       return;
     }
 
     const loginData = {
       email: form.email.trim(),
-      senha: form.senha
+      senha: form.senha,
     };
 
     try {
-      const response = await fetch("http://localhost:8080/tcc/usuarios/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(loginData)
-      });
+      const response = await fetch(
+        "http://localhost:8080/tcc/usuarios/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+        }
+      );
 
       if (response.ok) {
         const usuario = await response.json();
-        console.log("Login bem-sucedido:", usuario);
-        
-        // Armazenar os dados do usuário no localStorage
         localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
-        
-        // Redirecionar para a página protegida
-        navigate("/inicio"); // Usando react-router
+
+        Toast.fire({
+          icon: "success",
+          title: "Login realizado com sucesso!",
+        });
+
+        navigate("/inicio");
       } else if (response.status === 401) {
-        setMensagemErro("Usuário ou senha incorretos.");
+        Toast.fire({
+          icon: "error",
+          title: "Usuário ou senha incorretos.",
+        });
       } else {
-        setMensagemErro("Erro ao tentar fazer login.");
+        Toast.fire({
+          icon: "error",
+          title: "Erro ao tentar fazer login.",
+        });
       }
     } catch (error) {
       console.error("Erro de conexão:", error);
-      setMensagemErro("Erro de conexão com o servidor.");
+      Toast.fire({
+        icon: "error",
+        title: "Erro de conexão com o servidor.",
+      });
     }
   };
 

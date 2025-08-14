@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
     import { Link, useNavigate, useParams } from "react-router-dom";
     import "bootstrap/dist/css/bootstrap.min.css";
     import "@fortawesome/fontawesome-free/css/all.min.css";
+    import Swal from "sweetalert2";
+    import withReactContent from "sweetalert2-react-content";
     import perfilPadrao from "../IMG/icon perfil novo.png";
     import '../css/PerfilUser.css';
 
+    const MySwal = withReactContent(Swal);
 
     export default function PerfilUser() {
     var{ id } = useParams()
@@ -50,16 +53,40 @@ import React, { useState, useEffect } from "react";
     const navigate = useNavigate();
     // Função para excluir usuário
     const handleExcluirUsuario = async () => {
-        if (!window.confirm('Tem certeza que deseja excluir sua conta? Essa ação não pode ser desfeita.')) return;
+        const result = await MySwal.fire({
+            title: "Tem certeza?",
+            text: "Essa ação não pode ser desfeita!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim, excluir",
+            cancelButtonText: "Cancelar"
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
             await fetch(`http://localhost:8080/tcc/usuario/${usuario.id}`, {
                 method: 'DELETE',
             });
             localStorage.removeItem('usuarioLogado');
-            alert('Usuário excluído com sucesso!');
-            navigate('./Login.jsx'); // Redireciona para a página de login após exclusão
+            MySwal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Usuário excluído com sucesso!',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            navigate('/login');
         } catch (err) {
-            alert('Erro ao excluir usuário.');
+            MySwal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Erro ao excluir usuário.',
+                showConfirmButton: false,
+                timer: 3000
+            });
         }
     };
 
@@ -72,12 +99,14 @@ import React, { useState, useEffect } from "react";
     // Função para salvar edição da demanda
     const handleSalvarDemandaEdit = async (e) => {
         e.preventDefault();
-        // Garante que data_postagem nunca seja nulo
         const demandaParaSalvar = {
             ...demandaEdit,
             usuarioId: usuario.id,
-            data_postagem: demandaEdit.data_postagem || (demandas.find(d => d.id === editandoDemandaId)?.data_postagem) || new Date().toISOString()
+            data_postagem: demandaEdit.data_postagem ||
+                (demandas.find(d => d.id === editandoDemandaId)?.data_postagem) ||
+                new Date().toISOString()
         };
+
         try {
             const res = await fetch(`http://localhost:8080/tcc/demandas/${editandoDemandaId}`, {
                 method: 'PUT',
@@ -88,8 +117,23 @@ import React, { useState, useEffect } from "react";
             setDemandas(demandas.map(d => d.id === editandoDemandaId ? data : d));
             setEditandoDemandaId(null);
             setDemandaEdit(null);
+            MySwal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Demanda editada com sucesso!',
+                showConfirmButton: false,
+                timer: 3000
+            });
         } catch (err) {
-            alert('Erro ao salvar edição da demanda.');
+            MySwal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Erro ao salvar edição da demanda.',
+                showConfirmButton: false,
+                timer: 3000
+            });
         }
     };
 
@@ -108,18 +152,33 @@ import React, { useState, useEffect } from "react";
     };
 
     const confirmarExcluirDemanda = async () => {
-      if (!demandaParaExcluir) return;
-      try {
-        await fetch(`http://localhost:8080/tcc/demandas/${demandaParaExcluir}`, {
-          method: 'DELETE',
-        });
-        setDemandas(demandas.filter(d => d.id !== demandaParaExcluir));
-        setShowModalExcluir(false);
-        setDemandaParaExcluir(null);
-      } catch (err) {
-        alert('Erro ao excluir demanda.');
-        setShowModalExcluir(false);
-      }
+        if (!demandaParaExcluir) return;
+        try {
+            await fetch(`http://localhost:8080/tcc/demandas/${demandaParaExcluir}`, {
+                method: 'DELETE',
+            });
+            setDemandas(demandas.filter(d => d.id !== demandaParaExcluir));
+            setShowModalExcluir(false);
+            setDemandaParaExcluir(null);
+            MySwal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Demanda excluída!',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        } catch (err) {
+            setShowModalExcluir(false);
+            MySwal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Erro ao excluir demanda.',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        }
     };
 
     useEffect(() => {
@@ -252,11 +311,18 @@ import React, { useState, useEffect } from "react";
         // Função para criar nova demanda
         const handleCriarDemanda = async (e) => {
             e.preventDefault();
-            // Validação simples
             if (!novaDemanda.titulo || !novaDemanda.descricao || !novaDemanda.categoria || !novaDemanda.status || (usuario?.tipo_usuario === 'apoiador' && !novaDemanda.tipoApoio)) {
-                alert('Preencha todos os campos obrigatórios.');
+                MySwal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Preencha todos os campos obrigatórios.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
                 return;
             }
+
             try {
                 const res = await fetch(`http://localhost:8080/tcc/demandas`, {
                     method: 'POST',
@@ -273,15 +339,31 @@ import React, { useState, useEffect } from "react";
                     titulo: '', descricao: '', categoria: '', cidade: usuario.cidade, estado: usuario.estado, status: '', data_postagem: '', tipoApoio: ''
                 });
                 setFormDemandaAberto(false);
+                MySwal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Demanda criada!',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             } catch (err) {
-                alert('Erro ao criar demanda.');
+                MySwal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Erro ao criar demanda.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             }
         };
+
 
         const handleSalvarPerfil = async () => {
             if (!usuario) return;
             let fotoUrl = fotoPerfil;
-            // Upload da foto via FormData
+
             if (fotoFile) {
                 const formData = new FormData();
                 formData.append('file', fotoFile);
@@ -294,11 +376,18 @@ import React, { useState, useEffect } from "react";
                     fotoUrl = dataUpload.url || dataUpload.foto_perfil || fotoPerfil;
                     setFotoTimestamp(Date.now());
                 } catch (err) {
-                    alert('Erro ao fazer upload da foto.');
+                    MySwal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Erro ao fazer upload da foto.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                     return;
                 }
             }
-            // Monta objeto apenas com dados necessários e garante que não há campos indefinidos
+
             const dadosAtualizados = {
                 id: usuario.id,
                 nome: usuario.nome || '',
@@ -310,6 +399,7 @@ import React, { useState, useEffect } from "react";
                 biografia: biografia || '',
                 foto_perfil: fotoUrl || ''
             };
+
             try {
                 const res = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}`, {
                     method: "PUT",
@@ -322,12 +412,25 @@ import React, { useState, useEffect } from "react";
                 }
                 const data = await res.json();
                 setUsuario(data);
-                alert("Perfil atualizado com sucesso!");
+                MySwal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Perfil atualizado com sucesso!',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             } catch (err) {
-                console.error("Erro ao atualizar perfil:", err);
-                alert("Erro ao salvar alterações: " + err.message);
+                MySwal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Erro ao salvar alterações: ' + err.message,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             }
-            };
+        };
 
         if (loading) return <div className="text-center mt-5">Carregando...</div>;
         if (!usuario) return <div className="alert alert-danger mt-5">Erro ao carregar perfil</div>;
@@ -617,12 +720,7 @@ import React, { useState, useEffect } from "react";
                                                     <option value="fechada">Fechada</option>
                                                 </select>
                                             </div>
-                                            <input
-                                                type="date"
-                                                className="form-control"
-                                                value={novaDemanda.data_postagem}
-                                                onChange={e => setNovaDemanda({ ...novaDemanda, data_postagem: e.target.value })}
-                                                />
+
                                             <button type="submit" className="btn btn-success me-2">Criar Demanda</button>
                                             <button type="button" className="btn btn-secondary" onClick={() => setFormDemandaAberto(false)}>Cancelar</button>
                                         </form>
