@@ -2,12 +2,12 @@ package TCC.Trabalho.TCC.V.de.Vigilancia.Model.Demanda;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import TCC.Trabalho.TCC.V.de.Vigilancia.Model.Usuario.UsuarioModel;
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,7 +33,9 @@ public class DemandasModel {
     @Column(nullable = false)
     private String descricao;
     
-     @Column(nullable = false)
+    @CreationTimestamp
+    @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate data_postagem;
 
     @Enumerated(EnumType.STRING)

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -66,7 +67,7 @@ public class PostController {
     private PostResponse toResponse(Post post) {
         UsuarioModel autor = post.getAutor();
         return new PostResponse(post.getId(), post.getMessage(), post.getLikes(), 
-        post.getFotoPost(), autor.getId(), autor.getNome(), post.getComments());
+        post.getFotoPost(), autor.getId(), autor.getNome(), post.getComments(), post.getHorario_postagem());
     }
 
     public static class PostResponse {
@@ -77,8 +78,9 @@ public class PostController {
         public Long autor;
         public String autorNome;
         public List<Comment> comments;
+        public LocalDateTime horario_postagem;
         public PostResponse(long id, String message, int likes, byte[] fotoPost,
-        Long autor, String autorNome, List<Comment> comments) {
+        Long autor, String autorNome, List<Comment> comments, LocalDateTime horario_postagem) {
             this.id = id;
             this.message = message;
             this.fotoPost = fotoPost;
@@ -86,6 +88,7 @@ public class PostController {
             this.autor = autor;
             this.autorNome = autorNome;
             this.comments = comments;
+            this.horario_postagem = horario_postagem;
         }
     }
 

@@ -1,5 +1,6 @@
 package TCC.Trabalho.TCC.V.de.Vigilancia.Model.Postagens;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import TCC.Trabalho.TCC.V.de.Vigilancia.Model.Usuario.UsuarioModel;
@@ -8,7 +9,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "post")
@@ -50,5 +55,10 @@ public class Post {
         inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
     private Set<UsuarioModel> likedBy = new HashSet<>();
+
+    @CreationTimestamp
+    @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime horario_postagem;
 
 }
