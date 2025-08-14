@@ -1,0 +1,84 @@
+@import "./vars.css";
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-card h2 {
+  color: #2b2d42;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.login-card p {
+  color: #495057;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2b2d42;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.esqueci-senha {
+  display: block;
+  text-align: right;
+  margin-top: 8px;
+  color: #6c757d;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.btn-entrar {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--verde-principal);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: #495057;
+}
+
+.login-footer a {
+  color: var(--verde-principal);
+  text-decoration: none;
+  font-weight: 500;
+}

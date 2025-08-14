@@ -1,0 +1,465 @@
+:root {
+  --primary-color: #1e471d;
+  --primary-hover: #218838;
+  --text-color: #222;
+  --text-light: #555;
+  --white: #fff;
+  --bege:#c5fcc0;
+  --gray-light: #f8f9fa;
+  --border-color: #e0e0e0;
+  --transition: all 0.3s ease-in-out;
+}
+/* Ícone do menu hamburguer customizado */
+.menu-hamburguer {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(40,167,69,0.08);
+}
+.menu-hamburguer:hover {
+  box-shadow: 0 4px 16px rgba(40,167,69,0.18);
+  background: rgba(255,255,255,0.13);
+}
+.menu-hamburguer-bar {
+  position: absolute;
+  left: 8px;
+  width: 24px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+.menu-hamburguer-bar.top {
+  top: 11px;
+}
+.menu-hamburguer-bar.middle {
+  top: 18px;
+}
+.menu-hamburguer-bar.bottom {
+  top: 25px;
+}
+.menu-hamburguer.open .menu-hamburguer-bar.top {
+  transform: translateY(7px) rotate(45deg);
+}
+.menu-hamburguer.open .menu-hamburguer-bar.middle {
+  opacity: 0;
+}
+.menu-hamburguer.open .menu-hamburguer-bar.bottom {
+  transform: translateY(-7px) rotate(-45deg);
+}
+/* Depoimento destacado */
+.depoimento-card {
+  max-width: 900px;
+  background: linear-gradient(90deg, #c5fcc0 0%, #b2f7b2 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(40, 167, 69, 0.10);
+  padding: 2.5rem 2rem;
+  margin-top: 2rem;
+}
+.depoimento-text {
+  font-size: 1.35rem;
+  color: #222;
+  text-align: center;
+}
+.depoimento-autor {
+  font-size: 1rem;
+  color: #222;
+  font-style: italic;
+  text-align: center;
+}
+/* Rodapé moderno */
+.footer-main {
+  background: #222;
+  color: #ccc;
+  border-top: 1px solid #333;
+  font-size: 1rem;
+}
+.footer-text, .footer-links a {
+  color: #ccc;
+  text-decoration: none;
+  margin-right: 0.5rem;
+}
+.footer-links a:hover {
+  color: #28a745;
+}
+.footer-social a {
+  color: #ccc;
+  font-size: 1.5rem;
+  transition: color 0.2s;
+}
+.footer-social a:hover {
+  color: #28a745;
+}
+/* Rodapé */
+.footer-main {
+  background: var(--gray-light);
+  border-top: 1px solid var(--border-color);
+  color: var(--text-light);
+  font-size: 1rem;
+  margin-top: 3rem;
+}
+.footer-text {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-light);
+}
+.btn-how-comprador:hover,
+.btn-how-switch.btn-outline-success:hover {
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+}
+/* Variáveis */
+
+/* Global */
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+  background-color: var(--gray-light);
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+/* Navbar */
+.navbar {
+  transition: var(--transition);
+}
+
+.btn-cadastro{
+ border: solid 1px var(none);
+  border-radius: 30px;
+  background-color: var(--white);
+  color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-family: 'Poppins', sans-serif, var(--text-color);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.btn-cadastro:hover {
+  background-color: var(--primary-hover);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+}
+
+.btn-cadastro:active {
+  transform: translateY(2px);
+}
+
+.btn-login{
+  border: solid 1px var(none);
+  border-radius: 30px;
+  background-color: var(--white);
+  color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(33, 190, 69, 0.15);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-family: 'Poppins', sans-serif, var(--text-color);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.btn-login:hover {
+  background-color: var(--primary-hover);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+}
+
+.navbar .nav-link {
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.navbar .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+}
+
+.hero__title {
+  font-size: clamp(3rem, 3vw, 3rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+.hero__subtitle {
+  font-size: 1.15rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.hero__image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.hero__image:hover {
+  transform: translateY(-10px);
+}
+
+/* Botões principais */
+.btn-cadastroSafra,
+.btn-apoiador {
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.btn-cadastroSafra {
+  background-color: #1e471d;
+  color: var(--white);
+  border: 1px solid #1e471d;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+}
+
+.btn-cadastroSafra:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-apoiador {
+  background-color: var(--white);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.08);
+}
+
+.btn-apoiador:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Cards */
+/* Seção Como Funciona */
+.how-it-works-section {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--gray-light);
+  padding: 4rem 0;
+}
+
+/* Títulos da seção */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.main-how-title {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--text-color);
+  text-shadow: 0 2px 8px rgba(52, 58, 53, 0.726);
+  margin-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(90deg, var(--text-light) 0%, var(--text-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+/* Botões de alternância Agricultores/Compradores */
+.btn-how-switch {
+  border-radius: 50px !important;
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  margin: 0 0.5rem;
+}
+.btn-how-comprador {
+  color: #1e471d !important;
+  border-color: #1e471d !important;
+}
+.btn-how-switch-active {
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+}
+.btn-how-switch-active.btn-how-comprador {
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+}
+.btn-how-switch-active {
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+}
+.btn-how-switch-active.btn-how-comprador {
+  /* Mantém gradiente verde para compradores também */
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+}
+
+.section-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-light);
+  max-width: 42rem;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+/* Títulos para agricultores e compradores */
+.card-section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.agricultor-title {
+  color: #1e471d;
+  margin: 1.5rem ;
+}
+
+.comprador-title {
+  color: #1e471d;
+  margin: 1.5rem ;
+}
+
+/* Estilo dos cartões */
+.step-card {
+  background-color: var(--white);
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.step-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Ícones dos cartões */
+.step-icon-wrapper {
+  width: 4.5rem;
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  transition: var(--transition);
+}
+
+.step-icon-wrapper svg {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.agricultor .step-icon-wrapper {
+  background-color: #d1e7dd;
+  color: #1e471d;
+}
+
+.comprador .step-icon-wrapper {
+  background-color: #cce5ff;
+  color: #1e471d;
+}
+
+/* Títulos e texto dos passos */
+.step-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.step-text {
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* Responsivo */
+@media (max-width: 991.98px) {
+  .hero__content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero__text {
+    max-width: 100%;
+  }
+
+  .hero__buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero__image {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero {
+    padding: 3rem 0;
+  }
+
+  .bg-depoimento {
+    padding: 1rem;
+  }
+}
+  .card.cartoes {
+    padding: 1.5rem;
+  }
+
+  .card.cartoes .icon {
+    font-size: 2rem;
+  }
+
+.card.cartoes h6 {
+  font-size: 1rem;
+}
+
+@media (max-width: 510px) {
+  .card.cartoes {
+    padding: 1rem;
+  }
+
+  .card.cartoes .icon {
+    font-size: 1.5rem;
+  }
+
+  .card.cartoes h6 {
+    font-size: 0.875rem;
+  }
+}

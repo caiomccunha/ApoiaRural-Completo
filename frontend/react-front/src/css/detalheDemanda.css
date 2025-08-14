@@ -1,0 +1,69 @@
+/* detalheDemanda.css */
+
+.container {
+  font-family: 'Poppins', sans-serif;
+}
+
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card-header.bg-success {
+  background-color: #2d752b !important;
+  padding: 16px 24px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.card-text {
+  font-size: 1rem;
+  color: #555;
+}
+
+.text-muted {
+  font-size: 0.875rem;
+}
+
+textarea.form-control {
+  resize: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  border-radius: 6px;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+form .text-success,
+form .text-danger {
+  font-size: 0.85rem;
+  margin-left: 10px;
+}
+
+.btn-enviar{   
+    background-color:#2d752b;
+    border: none;
+    border-radius: 6px;
+    color: white;
+}

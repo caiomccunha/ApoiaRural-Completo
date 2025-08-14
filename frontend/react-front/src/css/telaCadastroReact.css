@@ -1,0 +1,96 @@
+@import "./vars.css";
+
+.cadastro-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  padding: 20px;
+}
+
+.cadastro-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.cadastro-card h2 {
+  color: #2b2d42;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.cadastro-card p {
+  color: #495057;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2b2d42;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.cep-group {
+  flex: 2;
+}
+
+.uf-group {
+  flex: 1;
+}
+
+.dica-senha {
+  display: block;
+  margin-top: 8px;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.btn-cadastrar {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--verde-principal);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.cadastro-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: #495057;
+}
+
+.cadastro-footer a {
+  color: var(--verde-principal);
+  text-decoration: none;
+  font-weight: 500;
+}

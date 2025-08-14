@@ -1,0 +1,31 @@
+.bodyType01 {
+    padding: 30px;
+}
+
+.bodyType02 {
+    padding: 0px;
+    margin: 5px;
+}
+
+.contatoChat {
+    text-decoration: none;
+}
+
+a{
+    color: inherit;
+    text-decoration: none;
+}
+
+.profileAnchor:hover{
+    text-decoration: underline;
+    color: green;
+}
+
+.postedBy {
+  color: green;
+}
+
+.postedBy:hover {
+  color: green;
+  text-decoration: underline;
+}
