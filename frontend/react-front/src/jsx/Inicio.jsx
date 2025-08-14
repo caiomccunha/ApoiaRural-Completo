@@ -3,12 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../css/telaInicialReact.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import perfilPadrao from "../IMG/icon perfil novo.png";
 import post1Img from "../IMG/CrisViana.jpg";
 import post2Img from "../IMG/AgroTech.jpg";
 import iotImg from "../IMG/Iot.jpg";
 import tashaImg from "../IMG/Tasha.jpg";
 import kyanImg from "../IMG/Kyan.jpg";
+
+const MySwal = withReactContent(Swal);
 
 const Inicio = () => {
     const [usuario, setUsuario] = useState(null);
@@ -63,34 +68,52 @@ const Inicio = () => {
         return () => URL.revokeObjectURL(objectUrl);
     }, [selectedFile]);
 
+    const Toast = MySwal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        },
+    });
+
     // Adicione a função fetchPosts para buscar os posts do backend
     const fetchPosts = async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/posts`);
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Erro ao buscar posts: ${response.status} - ${errorText}`);
-            }
-            const data = await response.json();
-            setPosts(data);
-            console.log('Posts carregados:', data); // Para depuração
-        } catch (err) {
-            console.error('Erro ao buscar posts:', err);
-            alert(err.message); // Mostra o erro detalhado
+    try {
+        const response = await fetch(`http://localhost:8080/api/posts`);
+        if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ao buscar posts: ${response.status} - ${errorText}`);
         }
+        const data = await response.json();
+        setPosts(data);
+        console.log("Posts carregados:", data); // Mantido para depuração
+    } catch (err) {
+        console.error("Erro ao buscar posts:", err);
+        Toast.fire({
+        icon: "error",
+        title: err.message,
+        });
+    }
     };
 
     useEffect(() => {
-        fetchPosts();
+         fetchPosts();
     }, []);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             if (file.size > 30 * 1024 * 1024) {
-                alert('Arquivo muito grande! O limite é 30MB.');
-                event.target.value = '';
-                return;
+            Toast.fire({
+                icon: "warning",
+                title: "Arquivo muito grande! O limite é 30MB.",
+            });
+            event.target.value = "";
+            return;
             }
             setSelectedFile(file);
         }
@@ -110,35 +133,46 @@ const Inicio = () => {
         setIsPosting(true);
         const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
         const formData = new FormData();
-        formData.append('post', JSON.stringify({
-      message: text.trim() || null
-    }));
-    formData.append('autorId', usuarioLogado.id); // campo separado
-    if (selectedFile) {
-        formData.append('file', selectedFile);
-    }
-    try {
-        const response = await fetch('http://localhost:8080/api/posts', {
-            method: 'POST',
-            body: formData,
-        });
-        if (!response.ok) {
-            const errorData = await response.text();
-            throw new Error(`Falha ao criar o post. Status: ${response.status}. Detalhes: ${errorData}`);
+        formData.append(
+            "post",
+            JSON.stringify({
+            message: text.trim() || null,
+            })
+        );
+        formData.append("autorId", usuarioLogado.id);
+        if (selectedFile) {
+            formData.append("file", selectedFile);
         }
-        // Após criar o post, buscar novamente os posts para atualizar o feed
-        await fetchPosts();
-        setText("");
-        setSelectedFile(null);
-        setPreview(null);
-        alert('Post criado com sucesso!');
-    } catch (error) {
-        console.error('Erro detalhado:', error);
-        alert('Ocorreu um erro ao criar o post. Verifique o console para mais detalhes.');
-    } finally {
-        setIsPosting(false);
-    }
+        try {
+            const response = await fetch("http://localhost:8080/api/posts", {
+            method: "POST",
+            body: formData,
+            });
+            if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(
+                `Falha ao criar o post. Status: ${response.status}. Detalhes: ${errorData}`
+            );
+            }
+            await fetchPosts();
+            setText("");
+            setSelectedFile(null);
+            setPreview(null);
+            Toast.fire({
+            icon: "success",
+            title: "Post criado com sucesso!",
+            });
+        } catch (error) {
+            console.error("Erro detalhado:", error);
+            Toast.fire({
+            icon: "error",
+            title: "Ocorreu um erro ao criar o post.",
+            });
+        } finally {
+            setIsPosting(false);
+        }
     };
+
 
     const filtrarPosts = (posts) => {
         console.log(posts);
@@ -153,7 +187,7 @@ const Inicio = () => {
         
         // Ordenação
         if (filtros.ordenacao === 'recentes') {
-            postsFiltrados.sort((a, b) => new Date(b.data) - new Date(a.data));
+            postsFiltrados.sort((a, b) => new Date(b.horario_postagem) - new Date(a.horario_postagem));
         } else {
             postsFiltrados.sort((a, b) => b.likes - a.likes);
         }
@@ -230,44 +264,62 @@ const [modalCommentText, setModalCommentText] = useState('');
 const [modalPostId, setModalPostId] = useState(null);
 
 const openCommentModal = (postId) => {
-    if (!postId) {
-        alert('ID do post inválido!');
-        return;
-    }
-    setModalPostId(postId);
-    setModalCommentText('');
-    setShowCommentModal(true);
+  if (!postId) {
+    Toast.fire({
+      icon: "error",
+      title: "ID do post inválido!",
+    });
+    return;
+  }
+  setModalPostId(postId);
+  setModalCommentText("");
+  setShowCommentModal(true);
 };
 
 const closeCommentModal = () => {
-    setShowCommentModal(false);
-    setModalCommentText('');
-    setModalPostId(null);
+  setShowCommentModal(false);
+  setModalCommentText("");
+  setModalPostId(null);
 };
 
 const sendModalComment = async () => {
-    if (!modalPostId) {
-        alert('ID do post inválido!');
-        return;
-    }
-    try {
-        console.log("alo");
-        await fetch(`http://localhost:8080/api/comments/post/${modalPostId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: modalCommentText, usuarioId: usuario.id})
-        });
-        closeCommentModal();
-        fetchPosts();
-    } catch (err) {
-        alert('Erro ao comentar');
-    }
+  if (!modalPostId) {
+    Toast.fire({
+      icon: "error",
+      title: "ID do post inválido!",
+    });
+    return;
+  }
+  try {
+    console.log("alo"); // Mantido para depuração
+    await fetch(
+      `http://localhost:8080/api/comments/post/${modalPostId}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: modalCommentText,
+          usuarioId: usuario.id,
+        }),
+      }
+    );
+    closeCommentModal();
+    fetchPosts();
+  } catch (err) {
+    Toast.fire({
+      icon: "error",
+      title: "Erro ao comentar",
+    });
+  }
 };
 
 const handleShare = (postId) => {
-    const url = `${window.location.origin}/post/${postId}`;
-    navigator.clipboard.writeText(url);
-    alert('Link do post copiado!');
+  const url = `${window.location.origin}/post/${postId}`;
+  navigator.clipboard.writeText(url);
+  Toast.fire({
+    icon: "success",
+    title: "Link do post copiado!",
+  });
 };
 
     if (!usuario) {
@@ -304,7 +356,7 @@ const handleShare = (postId) => {
                             <i className="fab fa-instagram"></i>
                         </a>
                     </div>
-                    <div className="dropdown2 ms-2">
+                    <div className="dropdown ms-2">
                     <button 
                         className="btn btn-outline-light dropdown-toggle" 
                         type="button"
@@ -514,8 +566,23 @@ const handleShare = (postId) => {
                     // onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
                 />
                 <div className="post-author">
-                    <h6><a className="profileAnchor" href={"/perfil/" + post.autor}>{post.autorNome || 'Usuário'}</a></h6>
-                    <small><i className="fas fa-map-marker-alt me-1"></i>{post.localizacao || ''} • {post.tempoPostado || ''}</small>
+                    <h6>
+                        <a className="profileAnchor" href={"/perfil/" + post.autor}>
+                            {post.autorNome || 'Usuário'}
+                        </a>
+                    </h6>
+                    <small>
+                    <i className="fas fa-clock me-1"></i>
+                    {post.horario_postagem 
+                        ? new Date(post.horario_postagem).toLocaleString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                            }) 
+                        : ''}
+                    </small>
                 </div>
                 <div className="dropdown">
                     <button className="btn btn-sm" data-bs-toggle="dropdown">
@@ -542,7 +609,7 @@ const handleShare = (postId) => {
                         <h6 className="fw-bold mb-2">Comentários</h6>
                         {post.comments.map((comment) => {
                             return (
-                                <div key={comment.id} className="comment-item d-flex align-items-center mb-2">
+                                <div key={comment.id} className="comment-item d-flex align-items-start mb-2">
                                     <img
                                         src= {comment.usuario.foto_perfil? 
                                             `http://localhost:8080/tcc/usuarios/${comment.usuario.id}/foto` : perfilPadrao}
@@ -550,7 +617,7 @@ const handleShare = (postId) => {
                                         alt={comment.usuario?.nome || 'Usuário'}
                                         style={{ width: 32, height: 32 }}
                                     />
-                                    <div>
+                                    <div style={{ textAlign: 'left' }}>
                                         <span className="fw-bold">{comment.usuario.nome || 'Usuário'}: </span>
                                         <span className="comment-content">{comment.content}</span>
                                     </div>
