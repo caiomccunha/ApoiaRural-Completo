@@ -57,4 +57,9 @@ Este projeto é divido em duas partes principais: **Back-end (API)** e **Front-e
   3. **Ferramentas**
      - Git & GitHub;
      - Postman (Para realizar os testes de API);
-     - 
+
+   ### Principais Funcionalidades do programa:
+      - Cadastro de perfis para Agricultores e Apoiadores;
+      - Publicação e gerenciamento de demandas para agricultores e apoiadores;
+      - Sistema de busca de demandas por filtros, tipo de demanda, tipo de usuário, entre outros;
+      - Sistema de posts e troca de mensagens entre usuários.
