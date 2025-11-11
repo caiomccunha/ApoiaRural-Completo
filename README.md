@@ -39,3 +39,22 @@ npm run dev
 ```
 
 5. Acesse [http://localhost:5173](http://localhost:5173) no seu navegador para o resultado.
+
+### Tecnologias Utilizadas:
+Este projeto é divido em duas partes principais: **Back-end (API)** e **Front-end(Web)**
+
+1. **Backend (API)**
+   - Java 21;
+   - SpringBoot 3;
+   - Spring Security;
+   - MySQL;
+   - Maven;
+
+  2. **Front-End (WEB)**
+     - React (Com Vite);
+     - CSS Modules (BootStrap);
+
+  3. **Ferramentas**
+     - Git & GitHub;
+     - Postman (Para realizar os testes de API);
+     - 
